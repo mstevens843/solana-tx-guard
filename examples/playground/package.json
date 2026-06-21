@@ -1,0 +1,27 @@
+{
+  "name": "@txshield/playground",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TxShield demo — paste a Solana transaction, see it flagged live in the browser.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@txshield/core": "workspace:*",
+    "@txshield/react": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.4"
+  }
+}

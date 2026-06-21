@@ -1,0 +1,23 @@
+{
+  "name": "@txshield/example-e2e-mainnet",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mainnet proof: the Lighthouse atomic-guard actually reverts a transaction on-chain (via simulation), and TxShield analyzes a real Jupiter swap.",
+  "scripts": {
+    "diagnose": "tsx src/diagnose.ts",
+    "prove": "tsx src/proveGuard.ts",
+    "analyze-jup": "tsx src/analyzeJupiter.ts"
+  },
+  "dependencies": {
+    "@solana/kit": "^2.3.0",
+    "@txshield/core": "workspace:*",
+    "@txshield/registry": "workspace:*",
+    "@txshield/simulation": "workspace:*",
+    "lighthouse-sdk": "^2.0.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "tsx": "^4.19.2"
+  }
+}

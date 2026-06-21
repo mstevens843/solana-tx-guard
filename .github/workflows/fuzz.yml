@@ -1,0 +1,26 @@
+name: Fuzz parser
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # daily
+  workflow_dispatch:
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # Property test: malformed / oversized / version-spoofed messages must never
+      # produce a NONE/Benign verdict. Runs the fuzz suite with an extended iteration count.
+      - run: pnpm --filter @txshield/core test -- fuzz --run
+        env:
+          TXSHIELD_FUZZ_ITERATIONS: "100000"

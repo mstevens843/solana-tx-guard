@@ -1,0 +1,24 @@
+{
+  "name": "@txshield/cli",
+  "version": "0.0.1",
+  "description": "TxShield CLI — scan a Solana transaction for drain risk. For CI gates and incident triage.",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "txshield": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "dependencies": {
+    "@txshield/core": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rm -rf dist"
+  }
+}
