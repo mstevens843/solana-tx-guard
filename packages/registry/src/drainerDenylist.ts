@@ -12,3 +12,10 @@ export const DRAINER_ADDRESS_DENYLIST: ReadonlySet<string> = new Set<string>([
 
 /** Token-2022 mints with known-malicious extensions (permanent-delegate / hook honeypots). */
 export const MALICIOUS_MINT_DENYLIST: ReadonlySet<string> = new Set<string>([]);
+
+/** Ready to pass straight into analyze({ denylists: DEFAULT_DENYLISTS }). */
+export const DEFAULT_DENYLISTS = {
+  programs: DRAINER_PROGRAM_DENYLIST,
+  addresses: DRAINER_ADDRESS_DENYLIST,
+  mints: MALICIOUS_MINT_DENYLIST,
+} as const;

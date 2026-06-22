@@ -178,7 +178,13 @@ function ex(
   expectAction: Example["expectAction"],
   expectKind?: string,
 ): Example {
-  return { label, description, base64: toBase64(bytes), expectAction, ...(expectKind ? { expectKind } : {}) };
+  return {
+    label,
+    description,
+    base64: toBase64(bytes),
+    expectAction,
+    ...(expectKind ? { expectKind } : {}),
+  };
 }
 
 export const EXAMPLES: Example[] = [

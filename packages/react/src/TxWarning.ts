@@ -1,6 +1,7 @@
-import { createElement } from "react";
-import type { ReactElement } from "react";
 import type { RiskReport } from "@txshield/core";
+import { createElement as h } from "react";
+import type { ReactElement } from "react";
+import { verdictIcon } from "./icons.js";
 import { severityTheme } from "./severityTheme.js";
 
 export interface TxWarningProps {
@@ -9,12 +10,13 @@ export interface TxWarningProps {
 
 /**
  * Drop-in Confirm-screen warning. Renders nothing when the verdict is NONE. Built with
- * createElement (no JSX) so it works in web and React Native without a transform.
+ * createElement (no JSX) so it works in web and React Native without a transform. Uses an inline
+ * SVG icon (no emoji) and themeable verdict colors (CSS vars `--txs-danger/--txs-warn/--txs-ok`).
  */
 export function TxWarning({ report }: TxWarningProps): ReactElement | null {
   if (!report || report.action === "NONE") return null;
   const theme = severityTheme(report.action);
-  return createElement(
+  return h(
     "div",
     {
       role: "alert",
@@ -24,11 +26,19 @@ export function TxWarning({ report }: TxWarningProps): ReactElement | null {
         padding: 12,
         borderRadius: 8,
         fontSize: 14,
+        display: "flex",
+        flexDirection: "column",
+        gap: 6,
       },
     },
-    createElement("strong", null, `${theme.icon} ${theme.label}`),
+    h(
+      "div",
+      { key: "head", style: { display: "flex", alignItems: "center", gap: 8, fontWeight: 600 } },
+      verdictIcon(theme.tone, { size: 16, color: theme.color }),
+      theme.label,
+    ),
     ...report.warnings.map((w, i) =>
-      createElement("div", { key: `${w.id}-${i}`, style: { marginTop: 6 } }, w.message),
+      h("div", { key: `${w.id}-${i}`, style: { fontSize: 13, color: "inherit" } }, w.message),
     ),
   );
 }

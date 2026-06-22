@@ -65,6 +65,8 @@ export interface DecodedTransaction {
   hasAddressLookups: boolean;
   /** true if any referenced ALT could not be resolved (offline/missing) — degrade + fail closed. */
   unresolvedLookupTables: boolean;
+  /** the referenced address-lookup-table account pubkeys (so a host can fetch + resolve them). */
+  lookupTableKeys: string[];
   /** the raw message bytes that were decoded (for submit-time digest binding). */
   messageBytes: Uint8Array;
 }
@@ -84,6 +86,8 @@ export interface Finding {
 export interface SimulationContext {
   ok: boolean;
   findings?: Finding[];
+  /** human-readable simulated state changes ("Send 0.01 SOL", "Receive ~1.4 USDC"). */
+  expectedStateChanges?: string[];
 }
 
 /**
@@ -118,6 +122,21 @@ export interface AnalyzeOptions {
   mintsInspected?: boolean;
   /** per-program capability declarations (see @txshield/registry's DEFAULT_PROGRAM_CAPABILITIES). */
   programCapabilities?: ReadonlyMap<string, ProgramCapability>;
+  /**
+   * Resolved address-lookup-table contents (ALT pubkey → its full ordered address list), fetched
+   * from an RPC. When provided, ALT-sourced accounts are resolved to real addresses and the
+   * `unresolved-lookup-table` gate clears. This is the "RPC resolver" the offline analyzer asks for.
+   */
+  lookupTables?: ReadonlyMap<string, readonly string[]>;
+  /**
+   * Known-drainer denylists — any referenced program/address/mint here forces a hard BLOCK.
+   * Populate from verified incident reports (see @txshield/registry's DRAINER_*_DENYLIST).
+   */
+  denylists?: {
+    programs?: ReadonlySet<string>;
+    addresses?: ReadonlySet<string>;
+    mints?: ReadonlySet<string>;
+  };
 }
 
 export interface AnalysisContext {

@@ -3,10 +3,18 @@
   "version": "0.0.1",
   "description": "TxShield CLI — scan a Solana transaction for drain risk. For CI gates and incident triage.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mstevens843/solana-tx-guard.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/mstevens843/solana-tx-guard/issues"
+  },
+  "homepage": "https://github.com/mstevens843/solana-tx-guard/tree/main/packages/cli#readme",
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
   "type": "module",
   "bin": {
     "txshield": "./dist/index.js"

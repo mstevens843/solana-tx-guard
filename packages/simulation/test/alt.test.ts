@@ -19,7 +19,8 @@ function lutBytes(addressFills: number[], withAuthority: boolean): Uint8Array {
 
 function rpcWithTable(data: Uint8Array): SimRpc {
   return {
-    getAccounts: async (addrs) => addrs.map(() => ({ lamports: 0, owner: "x", dataBase64: b64(data) })),
+    getAccounts: async (addrs) =>
+      addrs.map(() => ({ lamports: 0, owner: "x", dataBase64: b64(data) })),
     simulateTransaction: async () => ({ ok: true, logs: [], accounts: [] }),
   };
 }
@@ -47,7 +48,11 @@ describe("resolveLookups", () => {
 describe("verifyAltUnchanged", () => {
   it("detects a changed resolved set", () => {
     const before = { writable: ["A"], readonly: [], mutable: false };
-    expect(verifyAltUnchanged(before, { writable: ["A"], readonly: [], mutable: false }).changed).toBe(false);
-    expect(verifyAltUnchanged(before, { writable: ["B"], readonly: [], mutable: false }).changed).toBe(true);
+    expect(
+      verifyAltUnchanged(before, { writable: ["A"], readonly: [], mutable: false }).changed,
+    ).toBe(false);
+    expect(
+      verifyAltUnchanged(before, { writable: ["B"], readonly: [], mutable: false }).changed,
+    ).toBe(true);
   });
 });

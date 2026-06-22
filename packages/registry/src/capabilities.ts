@@ -22,6 +22,7 @@ export const DEFAULT_PROGRAM_CAPABILITIES: ReadonlyMap<string, ProgramCapability
   ["ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL", { transferToken: true, transferSol: true }], // ATA
   // DEX routers: move tokens/SOL, never change authority/ownership.
   ["JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4", { transferToken: true, transferSol: true }], // Jupiter v6
+  ["61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH", { transferToken: true, transferSol: true }], // Jupiter Ultra router
   ["675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8", { transferToken: true, transferSol: true }], // Raydium AMM v4
   ["whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", { transferToken: true, transferSol: true }], // Orca Whirlpool
 ]);

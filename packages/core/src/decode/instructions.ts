@@ -7,21 +7,21 @@
 // the minimal, fully-tested subset for the static slice; the `undecodedSensitive` fail-closed
 // flag is exactly what guards against decoder/runtime drift.
 
+import {
+  ADDRESS_LOOKUP_TABLE_PROGRAM,
+  ASSOCIATED_TOKEN_PROGRAM,
+  BPF_LOADER_UPGRADEABLE,
+  COMPUTE_BUDGET_PROGRAM,
+  CORE_VALUE_CAPABLE_PROGRAMS,
+  MEMO_PROGRAM,
+  STAKE_PROGRAM,
+  SYSTEM_PROGRAM,
+  TOKEN_2022_PROGRAM,
+  TOKEN_PROGRAM,
+  VOTE_PROGRAM,
+} from "../constants/programIds.js";
 import type { DecodedInstructionData } from "../types.js";
 import { readU32LE } from "../util/bytes.js";
-import {
-  CORE_VALUE_CAPABLE_PROGRAMS,
-  SYSTEM_PROGRAM,
-  TOKEN_PROGRAM,
-  TOKEN_2022_PROGRAM,
-  COMPUTE_BUDGET_PROGRAM,
-  MEMO_PROGRAM,
-  ASSOCIATED_TOKEN_PROGRAM,
-  ADDRESS_LOOKUP_TABLE_PROGRAM,
-  STAKE_PROGRAM,
-  VOTE_PROGRAM,
-  BPF_LOADER_UPGRADEABLE,
-} from "../constants/programIds.js";
 
 const SYSTEM_IX: Record<number, string> = {
   0: "CreateAccount",

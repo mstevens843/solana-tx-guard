@@ -4,15 +4,18 @@ Everything here is **your end** — it needs your npm + GitHub accounts. The rep
 publish-ready (build/test/typecheck green, `publishConfig.access: public` on every package, READMEs
 in place, `.env` gitignored).
 
-## Naming — all clear (checked 2026-06-20)
+## Naming — all clear (checked 2026-06-21)
 
 | Name | Status |
 |---|---|
-| npm scope `@txshield/*` (`@txshield/core`) | **free** (404 on the registry) |
+| npm packages `@txshield/*` (`@txshield/core`) | **free** (404 on the registry) |
 | npm unscoped `txshield` | **free** |
-| GitHub `github.com/mstevens843/txshield` | **available** (404) |
+| GitHub `github.com/mstevens843/solana-tx-guard` | **created + pushed** |
 
-No fallback needed. (Old fallbacks if anything changes: `solana-txshield`, `txsentinel`, `signshield`.)
+No fallback needed. (Old npm fallbacks if anything changes: `solana-txshield`, `txsentinel`, `signshield`.)
+Before publishing, make sure your npm account owns the `txshield` user/org scope. npm scopes map
+to npm users or organizations, so `@txshield/core` can only be published by an account with access
+to that scope.
 
 ## Pre-publish checklist
 
@@ -24,6 +27,7 @@ git status                                  # confirm .env is NOT listed (it's g
 
 - [ ] `LICENSE` present (MIT) — ✅ at repo root.
 - [ ] Each package has `publishConfig.access: public` — ✅.
+- [ ] npm `txshield` scope exists and your account can publish to it.
 - [ ] `npm whoami` returns your account (run `npm login` if not).
 
 ## First publish (simplest)
@@ -33,11 +37,17 @@ rewrites `workspace:*` to the real versions automatically.
 
 ```sh
 npm login
+npm whoami
 pnpm build
 pnpm -r publish --access public          # publishes all 6 public packages in dependency order
 ```
 
 (Add `--no-git-checks` if you haven't committed yet.)
+
+For the first release, publish manually from a logged-in local shell. A long-lived `NPM_TOKEN` is not
+required for that path. If you later want GitHub Actions to publish, configure npm Trusted Publishing
+or add an npm automation token deliberately; do not assume the release workflow can publish until one
+of those auth paths is configured.
 
 ## Ongoing releases (Changesets — already wired)
 
@@ -51,12 +61,12 @@ pnpm release                  # = changeset publish (needs npm login)
 ## GitHub
 
 ```sh
-git init && git add -A && git commit -m "TxShield: open Solana transaction-safety"
-gh repo create mstevens843/txshield --public --source=. --push
+git remote -v
+# origin  https://github.com/mstevens843/solana-tx-guard.git
 ```
 
-(`.changeset/config.json` has `baseBranch: main` — use `main`, or update that field if you ship from
-`master`.)
+The repo is already created and pushed at `mstevens843/solana-tx-guard`.
+(`.changeset/config.json` has `baseBranch: main` — keep shipping from `main`.)
 
 ## Deploy the demo playground (static site)
 

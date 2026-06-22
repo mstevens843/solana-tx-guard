@@ -1,8 +1,8 @@
 // R07 — CloseAccount sweeping lamports to a non-owner. Closing a token account sends its rent
 // (and any swept balance) to the destination; a destination that isn't the owner is a sweep.
 
-import type { Finding, Rule } from "../types.js";
 import { TOKEN_PROGRAMS } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 
 export const closeAccountRule: Rule = {
   id: "R07_TOKEN_CLOSE_SWEEP",

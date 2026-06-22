@@ -1,8 +1,8 @@
 // R19 — Stake account Authorize hijack. Handing the WITHDRAW authority to another party lets
 // them deactivate and take your staked SOL; the STAKER authority is lower risk.
 
-import type { Finding, Rule } from "../types.js";
 import { STAKE_PROGRAM } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 import { readU32LE } from "../util/bytes.js";
 
 export const stakeAuthorizeRule: Rule = {

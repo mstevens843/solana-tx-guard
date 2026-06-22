@@ -13,6 +13,7 @@ import {
   buildLegacyTx,
   buildV0TransferWithAltRecipient,
   computeBudgetNoop,
+  fromBase58,
   pk,
   stakeAuthorizeData,
   sysAdvanceNonce,
@@ -23,6 +24,8 @@ import {
 } from "./helpers.js";
 
 const fp = pk(1);
+const MEMO_ID = fromBase58("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+const memo = () => new Uint8Array([0x68, 0x69]); // "hi"
 
 describe("red-team bypass corpus", () => {
   it("durable nonce NOT at instruction 0 is still flagged (any-index)", () => {
@@ -52,8 +55,9 @@ describe("red-team bypass corpus", () => {
 
   it("decoy padding does not hide the buried SetAuthority", () => {
     const tx = buildLegacyTx(fp, [
-      { programId: COMPUTE_BUDGET_ID, accounts: [], data: computeBudgetNoop() },
-      { programId: COMPUTE_BUDGET_ID, accounts: [], data: computeBudgetNoop() },
+      { programId: COMPUTE_BUDGET_ID, accounts: [], data: computeBudgetNoop() }, // normal preamble
+      { programId: MEMO_ID, accounts: [], data: memo() }, // genuine decoy padding
+      { programId: MEMO_ID, accounts: [], data: memo() },
       {
         programId: TOKEN_ID,
         accounts: [
@@ -76,7 +80,11 @@ describe("red-team bypass corpus", () => {
 
   it("an undecodable instruction to a core program fails closed", () => {
     const tx = buildLegacyTx(fp, [
-      { programId: SYSTEM_ID, accounts: [{ pubkey: fp, signer: true, writable: true }], data: sysUnknown() },
+      {
+        programId: SYSTEM_ID,
+        accounts: [{ pubkey: fp, signer: true, writable: true }],
+        data: sysUnknown(),
+      },
     ]);
     const r = analyze(tx);
     expect(r.action).toBe("BLOCK");

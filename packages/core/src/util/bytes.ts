@@ -86,7 +86,10 @@ export class ByteReader {
 export function readU32LE(data: Uint8Array, offset = 0): number | undefined {
   if (offset + 4 > data.length) return undefined;
   return (
-    (data[offset]! | (data[offset + 1]! << 8) | (data[offset + 2]! << 16) | (data[offset + 3]! << 24)) >>>
+    (data[offset]! |
+      (data[offset + 1]! << 8) |
+      (data[offset + 2]! << 16) |
+      (data[offset + 3]! << 24)) >>>
     0
   );
 }

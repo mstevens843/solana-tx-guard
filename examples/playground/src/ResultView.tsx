@@ -1,12 +1,13 @@
 import type { RiskReport } from "@txshield/core";
-import { TxWarning, severityTheme } from "@txshield/react";
+import { severityTheme, TxWarning, verdictIcon } from "@txshield/react";
 
 export function ResultView({ report }: { report: RiskReport }) {
   const theme = severityTheme(report.action);
   return (
     <div className="result">
       <div className="badge" style={{ background: theme.color }}>
-        {theme.icon} {report.action} — {report.resultType}
+        <span className="badge-ic">{verdictIcon(theme.tone, { size: 15, color: "#fff" })}</span>
+        {report.action} — {report.resultType}
       </div>
 
       <div className="meta">

@@ -1,23 +1,45 @@
 # Integrating TxShield
 
-## Wallet / dApp Confirm screen (React)
+## Wallet / dApp Confirm screen (React) — turnkey
+
+`useTxGuard` runs the full pipeline (static verdict → resolve ALTs → simulate → balance preview) and
+`<TxGuardModal>` is a minimal, themeable drop-in confirm sheet. Both are self-contained (inline SVG
+icons, no Tailwind / CSS file / icon library) and theme to your app via the `accent` prop or CSS
+variables (`--txs-accent`, `--txs-bg`, `--txs-surface`, `--txs-border`, `--txs-text`, `--txs-muted`,
+`--txs-ok` / `--txs-warn` / `--txs-danger`).
+
+```tsx
+import { useTxGuard, TxGuardModal } from "@txshield/react";
+import { DEFAULT_PROGRAM_ALLOWLIST, DEFAULT_PROGRAM_CAPABILITIES } from "@txshield/registry";
+
+function ConfirmScreen({ txBytes, user, rpc, onSign, onClose }) {
+  const { report, stateChanges, loading } = useTxGuard(txBytes, {
+    user,
+    rpc, // your SimRpc adapter (see "Optional: simulation" below) — enables the balance preview
+    allowedPrograms: DEFAULT_PROGRAM_ALLOWLIST,
+    programCapabilities: DEFAULT_PROGRAM_CAPABILITIES,
+  });
+  return (
+    <TxGuardModal
+      open
+      report={report}
+      stateChanges={stateChanges}
+      loading={loading}
+      accent="#5b8cff"
+      onConfirm={onSign} // automatically disabled on a BLOCK verdict
+      onCancel={onClose}
+    />
+  );
+}
+```
+
+Prefer to render your own UI? Use the headless hook + minimal warning:
 
 ```tsx
 import { useTxShield, TxWarning } from "@txshield/react";
-import { DEFAULT_PROGRAM_ALLOWLIST } from "@txshield/registry";
 
-function ConfirmScreen({ txBytes }: { txBytes: Uint8Array }) {
-  const { report } = useTxShield(txBytes, { allowedPrograms: DEFAULT_PROGRAM_ALLOWLIST });
-  const blocked = report?.action === "BLOCK";
-  return (
-    <>
-      <TxWarning report={report} />
-      <button disabled={blocked} onClick={sign}>
-        {blocked ? "Blocked by TxShield" : "Sign"}
-      </button>
-    </>
-  );
-}
+const { report } = useTxShield(txBytes, { allowedPrograms: DEFAULT_PROGRAM_ALLOWLIST });
+// report.action is NONE | WARN | BLOCK — gate Sign + render <TxWarning report={report} />.
 ```
 
 ## Headless / backend (Node, trading UI)

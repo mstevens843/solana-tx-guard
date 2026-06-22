@@ -6,12 +6,7 @@
 // Encoding is delegated entirely to lighthouse-sdk (Codama/@solana/kit builders) — never
 // hand-rolled — so it stays correct against the on-chain program.
 
-import {
-  address,
-  isSignerRole,
-  isWritableRole,
-  type IInstruction,
-} from "@solana/kit";
+import { type IInstruction, address, isSignerRole, isWritableRole } from "@solana/kit";
 import {
   EquatableOperator,
   IntegerOperator,
@@ -70,12 +65,21 @@ export function deriveAssertions(diff: AccountDiff[], user: string): GuardAssert
       out.push({ account: d.address, type: "token-amount-gte", value: d.postToken.amount });
       out.push({ account: d.address, type: "token-owner-eq", value: d.postToken.owner });
       out.push({ account: d.address, type: "token-delegate-eq", value: d.postToken.delegate });
-      out.push({ account: d.address, type: "token-close-authority-eq", value: d.postToken.closeAuthority });
+      out.push({
+        account: d.address,
+        type: "token-close-authority-eq",
+        value: d.postToken.closeAuthority,
+      });
     } else if (d.postLamports != null) {
       if (d.address === user) {
-        out.push({ account: d.address, type: "account-lamports-gte", value: BigInt(d.postLamports) });
+        out.push({
+          account: d.address,
+          type: "account-lamports-gte",
+          value: BigInt(d.postLamports),
+        });
       }
-      if (d.postOwner) out.push({ account: d.address, type: "account-owner-eq", value: d.postOwner });
+      if (d.postOwner)
+        out.push({ account: d.address, type: "account-owner-eq", value: d.postOwner });
     }
   }
   return out;
@@ -137,7 +141,10 @@ function buildIx(a: GuardAssertion): IInstruction {
 function toDescriptor(ix: IInstruction): GuardInstruction {
   return {
     programAddress: ix.programAddress as string,
-    accounts: (ix.accounts ?? []).map((acc) => ({ address: acc.address as string, role: acc.role })),
+    accounts: (ix.accounts ?? []).map((acc) => ({
+      address: acc.address as string,
+      role: acc.role,
+    })),
     data: (ix.data ?? new Uint8Array()) as Uint8Array,
   };
 }

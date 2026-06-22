@@ -2,12 +2,15 @@
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "organizeImports": { "enabled": true },
   "files": {
-    "ignore": ["dist", "node_modules", "fixtures/**/*.json"]
+    "ignore": ["dist", "node_modules", ".turbo", "fixtures/**/*.json"]
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
+      "style": {
+        "noNonNullAssertion": "off"
+      },
       "suspicious": {
         "noExplicitAny": "warn"
       }

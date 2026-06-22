@@ -2,7 +2,7 @@
 // findings here may only ADD to the static verdict, never clear it. The atomic-guard is the
 // non-spoofable enforcement layer (assertions revert a divergent execution on-chain).
 
-import { decodeTransaction, type Finding, type ProgramCapability } from "@txshield/core";
+import { type Finding, type ProgramCapability, decodeTransaction } from "@txshield/core";
 import { analyzeCpi } from "./cpi.js";
 import { diffSimulation } from "./diff.js";
 import { elevate } from "./elevate.js";
@@ -37,9 +37,11 @@ export {
   type LegacyInstructionDescriptor,
 } from "./lighthouse.js";
 export { inspectToken2022Mints } from "./mints.js";
+export { summarizeStateChanges, type TokenMeta, type TokenMetaEntry } from "./summarize.js";
 export {
   decodeAddressLookupTable,
   resolveLookups,
+  resolveLookupTables,
   verifyAltUnchanged,
   type AltLookup,
   type ResolvedAlt,
@@ -50,6 +52,8 @@ export interface SimulateAndDiffOptions {
   user?: string;
   /** per-program capabilities for the inner-CPI capability check (see @txshield/registry). */
   capabilities?: ReadonlyMap<string, ProgramCapability>;
+  /** resolved ALT contents so writable ALT-sourced accounts are tracked with real addresses. */
+  lookupTables?: ReadonlyMap<string, readonly string[]>;
 }
 
 /**
@@ -63,9 +67,13 @@ export async function simulateAndDiff(
   simulate: SimulateFn,
   options: SimulateAndDiffOptions = {},
 ): Promise<EnrichedSimulation> {
-  const tx = decodeTransaction(base64Tx);
+  const tx = decodeTransaction(base64Tx, options.lookupTables);
   const user = options.user ?? tx.feePayer;
-  const tracked = [...new Set(tx.accounts.filter((a) => a.writable).map((a) => a.address))];
+  const tracked = [
+    ...new Set(
+      tx.accounts.filter((a) => a.writable && !a.address.startsWith("lookup:")).map((a) => a.address),
+    ),
+  ];
 
   const raw = await simulate(base64Tx, tracked);
   const findings: Finding[] = [];

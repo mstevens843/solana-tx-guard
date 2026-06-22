@@ -1,8 +1,8 @@
 // R21 — Upgradeable-loader authority change or live Upgrade. Moving upgrade authority to
 // another account lets them replace a program's code; renouncing it (no new authority) is safe.
 
-import type { Finding, Rule } from "../types.js";
 import { BPF_LOADER_UPGRADEABLE } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 
 export const programUpgradeRule: Rule = {
   id: "R21_PROGRAM_UPGRADE_AUTHORITY",

@@ -2,8 +2,8 @@
 // of the user's token account (or mint/freeze authority) to another party is a takeover.
 // Fires when the current authority (account index 1) is the protected user.
 
-import type { Finding, Rule } from "../types.js";
 import { TOKEN_PROGRAMS } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 
 export const setAuthorityRule: Rule = {
   id: "R03_TOKEN_SETAUTHORITY",

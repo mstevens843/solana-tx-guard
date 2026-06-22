@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import { analyze } from "@txshield/core";
 import type { AnalyzeOptions, RiskReport } from "@txshield/core";
+import { useMemo } from "react";
 
 /**
  * Analyze a transaction for a Confirm screen. The static verdict is synchronous (no network),

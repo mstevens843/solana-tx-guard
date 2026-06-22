@@ -4,8 +4,8 @@
 // drains future inflows), so any approval to a non-allowlisted delegate is dangerous;
 // unlimited (u64::MAX) is critical.
 
-import type { Finding, Rule } from "../types.js";
 import { TOKEN_PROGRAMS } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 
 const U64_MAX = "18446744073709551615";
 

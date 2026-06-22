@@ -18,7 +18,11 @@ async function deriveAta(owner: string, tokenProgram: string, mint: string): Pro
   const enc = getAddressEncoder();
   const [pda] = await getProgramDerivedAddress({
     programAddress: address(ATA_PROGRAM),
-    seeds: [enc.encode(address(owner)), enc.encode(address(tokenProgram)), enc.encode(address(mint))],
+    seeds: [
+      enc.encode(address(owner)),
+      enc.encode(address(tokenProgram)),
+      enc.encode(address(mint)),
+    ],
   });
   return pda;
 }

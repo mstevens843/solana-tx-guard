@@ -13,6 +13,7 @@ export const DEFAULT_PROGRAM_ALLOWLIST: ReadonlySet<string> = new Set([
   "ComputeBudget111111111111111111111111111111", // Compute Budget
   "L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95", // Lighthouse
   "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4", // Jupiter Aggregator v6
+  "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH", // Jupiter Ultra router (JupiterZ)
   "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8", // Raydium AMM v4
   "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc", // Orca Whirlpool
 ]);

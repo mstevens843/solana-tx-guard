@@ -1,7 +1,7 @@
 // Shared predicates used across the danger-pattern rules.
 
-import type { AnalysisContext, DecodedInstruction } from "../types.js";
 import { CORE_VALUE_CAPABLE_PROGRAMS, INERT_PROGRAMS } from "../constants/programIds.js";
+import type { AnalysisContext, DecodedInstruction } from "../types.js";
 
 export function ixTouchesUserWritable(ix: DecodedInstruction, user: string): boolean {
   return ix.accounts.some((a) => a.address === user && a.writable);

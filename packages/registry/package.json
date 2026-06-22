@@ -3,6 +3,15 @@
   "version": "0.0.1",
   "description": "TxShield offline registry — program allowlist, drainer denylist, trusted-mint registry. Ships without a network dependency.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mstevens843/solana-tx-guard.git",
+    "directory": "packages/registry"
+  },
+  "bugs": {
+    "url": "https://github.com/mstevens843/solana-tx-guard/issues"
+  },
+  "homepage": "https://github.com/mstevens843/solana-tx-guard/tree/main/packages/registry#readme",
   "publishConfig": {
     "access": "public"
   },

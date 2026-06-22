@@ -1,7 +1,7 @@
 # @txshield/cli
 
 Scan a Solana transaction for drain risk from the terminal — for CI gates and incident triage.
-Part of [TxShield](https://github.com/mstevens843/txshield).
+Part of [TxShield](https://github.com/mstevens843/solana-tx-guard).
 
 ```sh
 npx @txshield/cli scan <base64 | file | signature>

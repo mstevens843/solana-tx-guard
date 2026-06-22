@@ -3,8 +3,8 @@
 // UI shows) is a likely spoof. (Full spoofed-token-account ownership verification is RPC-based and
 // lives in @txshield/simulation's verifyTokenAccounts.)
 
-import type { Finding, Rule } from "../types.js";
 import { CANONICAL_MINTS } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 
 function looksLike(addr: string, canonical: string): boolean {
   if (addr === canonical || addr.length < 12) return false;

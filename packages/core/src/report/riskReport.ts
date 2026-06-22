@@ -1,7 +1,14 @@
 // Assembles findings into a RiskReport mirroring Blowfish (`action`) + Blockaid (`resultType`).
 // Severity → action: CRITICAL ⇒ BLOCK, WARNING ⇒ WARN, INFO/none ⇒ NONE.
 
-import type { Action, Finding, MessageVersion, ResultType, RiskReport, Severity } from "../types.js";
+import type {
+  Action,
+  Finding,
+  MessageVersion,
+  ResultType,
+  RiskReport,
+  Severity,
+} from "../types.js";
 
 const RANK: Record<Severity, number> = { INFO: 0, WARNING: 1, CRITICAL: 2 };
 
@@ -10,6 +17,8 @@ export interface ReportMeta {
   fullySigned: boolean;
   hasAddressLookups: boolean;
   atomicGuardRecommended: boolean;
+  /** real simulated state changes (from @txshield/simulation); static-only analysis leaves this empty. */
+  expectedStateChanges?: string[];
   error?: string;
 }
 
@@ -37,7 +46,7 @@ export function buildReport(
     action,
     resultType,
     warnings: sorted,
-    expectedStateChanges: sorted.filter((f) => f.severity !== "INFO").map((f) => f.message),
+    expectedStateChanges: meta.expectedStateChanges ?? [],
     validation: {
       classification: resultType,
       reason: top?.message ?? "No risks detected by static analysis.",

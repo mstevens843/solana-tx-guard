@@ -45,8 +45,16 @@ describe("diffSimulation", () => {
       accounts: [
         {
           address: "ATA",
-          pre: { lamports: 2_039_280, owner: programIds.TOKEN_PROGRAM, dataBase64: b64(tokenAccountBytes(1000n, null)) },
-          post: { lamports: 2_039_280, owner: programIds.TOKEN_PROGRAM, dataBase64: b64(tokenAccountBytes(900n, 7)) },
+          pre: {
+            lamports: 2_039_280,
+            owner: programIds.TOKEN_PROGRAM,
+            dataBase64: b64(tokenAccountBytes(1000n, null)),
+          },
+          post: {
+            lamports: 2_039_280,
+            owner: programIds.TOKEN_PROGRAM,
+            dataBase64: b64(tokenAccountBytes(900n, 7)),
+          },
         },
       ],
     };

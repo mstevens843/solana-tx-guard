@@ -3,8 +3,8 @@
 // RPC call. Offline we cannot clear them, so we WARN — never Benign. The host suppresses this
 // by passing `mintsInspected: true` after running @txshield/simulation's inspectToken2022Mints.
 
-import type { Finding, Rule } from "../types.js";
 import { TOKEN_2022_PROGRAM } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 
 export const token2022GuardRule: Rule = {
   id: "R09_T22_UNINSPECTED",

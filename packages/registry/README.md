@@ -1,6 +1,6 @@
 # @txshield/registry
 
-Offline data for [TxShield](https://github.com/mstevens843/txshield): the program allowlist, drainer
+Offline data for [TxShield](https://github.com/mstevens843/solana-tx-guard): the program allowlist, drainer
 denylist, trusted-mint registry, and per-program capability declarations. No network dependency.
 
 ```sh

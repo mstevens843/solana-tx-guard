@@ -6,8 +6,8 @@
 // marked `unresolvedLookupTables`. Sensitive rules treat ALT-sourced targets as dangerous.
 
 import type { MessageVersion, ResolvedAccount } from "../types.js";
-import { ByteReader, TxBytesError, toBytes } from "../util/bytes.js";
 import { toBase58 } from "../util/base58.js";
+import { ByteReader, TxBytesError, toBytes } from "../util/bytes.js";
 
 export interface RawInstruction {
   programIdIndex: number;
@@ -26,6 +26,8 @@ export interface ParsedMessage {
   recentBlockhash: string;
   hasAddressLookups: boolean;
   unresolvedLookupTables: boolean;
+  /** the referenced address-lookup-table account pubkeys (so a host can fetch + resolve them). */
+  lookupTableKeys: string[];
   messageBytes: Uint8Array;
 }
 
@@ -38,7 +40,10 @@ function isZero(bytes: Uint8Array): boolean {
   return true;
 }
 
-export function parseMessage(input: Uint8Array | string): ParsedMessage {
+export function parseMessage(
+  input: Uint8Array | string,
+  lookupTables?: ReadonlyMap<string, readonly string[]>,
+): ParsedMessage {
   const bytes = toBytes(input);
   const r = new ByteReader(bytes);
 
@@ -89,22 +94,20 @@ export function parseMessage(input: Uint8Array | string): ParsedMessage {
     instructions.push({ programIdIndex, accountIndexes, data });
   }
 
-  // address table lookups (v0 only)
-  let altWritableCount = 0;
-  let altReadonlyCount = 0;
-  const altTableKeys: string[] = [];
+  // address table lookups (v0 only) — capture the per-table indexes so they can be resolved
+  // against RPC-fetched table contents (options.lookupTables); offline they stay placeholders.
+  const altLookups: { key: string; writable: number[]; readonly: number[] }[] = [];
   let hasAddressLookups = false;
   if (version === 0) {
     const altCount = r.readShortVec();
     hasAddressLookups = altCount > 0;
     for (let i = 0; i < altCount; i++) {
-      altTableKeys.push(toBase58(r.readBytes(PUBKEY_LEN)));
+      const key = toBase58(r.readBytes(PUBKEY_LEN));
       const wCount = r.readShortVec();
-      r.readBytes(wCount); // writable indexes (into the table) — count is what we need offline
+      const writable = Array.from(r.readBytes(wCount));
       const rCount = r.readShortVec();
-      r.readBytes(rCount);
-      altWritableCount += wCount;
-      altReadonlyCount += rCount;
+      const readonly = Array.from(r.readBytes(rCount));
+      altLookups.push({ key, writable, readonly });
     }
   }
 
@@ -119,27 +122,38 @@ export function parseMessage(input: Uint8Array | string): ParsedMessage {
       : i < staticCount - numReadonlyUnsignedAccounts;
     accounts.push({ index: i, address: staticKeys[i]!, writable, signer, source: "static" });
   }
+  // Resolved ordering: static keys, then all writable ALT addresses (table order, index order),
+  // then all readonly. Resolve each against options.lookupTables; unresolved → placeholder.
   let cursor = staticCount;
-  const tableLabel = altTableKeys[0] ? `${altTableKeys[0].slice(0, 4)}..` : "alt";
-  for (let i = 0; i < altWritableCount; i++) {
-    accounts.push({
-      index: cursor,
-      address: `lookup:${tableLabel}:w#${i}`,
-      writable: true,
-      signer: false,
-      source: "alt-writable",
-    });
-    cursor += 1;
+  let anyUnresolved = false;
+  const resolve = (key: string, idx: number): string | undefined => lookupTables?.get(key)?.[idx];
+  for (const tbl of altLookups) {
+    for (const idx of tbl.writable) {
+      const addr = resolve(tbl.key, idx);
+      if (addr === undefined) anyUnresolved = true;
+      accounts.push({
+        index: cursor,
+        address: addr ?? `lookup:${tbl.key.slice(0, 4)}..:w#${idx}`,
+        writable: true,
+        signer: false,
+        source: "alt-writable",
+      });
+      cursor += 1;
+    }
   }
-  for (let i = 0; i < altReadonlyCount; i++) {
-    accounts.push({
-      index: cursor,
-      address: `lookup:${tableLabel}:r#${i}`,
-      writable: false,
-      signer: false,
-      source: "alt-readonly",
-    });
-    cursor += 1;
+  for (const tbl of altLookups) {
+    for (const idx of tbl.readonly) {
+      const addr = resolve(tbl.key, idx);
+      if (addr === undefined) anyUnresolved = true;
+      accounts.push({
+        index: cursor,
+        address: addr ?? `lookup:${tbl.key.slice(0, 4)}..:r#${idx}`,
+        writable: false,
+        signer: false,
+        source: "alt-readonly",
+      });
+      cursor += 1;
+    }
   }
 
   // --- validate every instruction index against the resolved account list (fail closed) ---
@@ -162,7 +176,8 @@ export function parseMessage(input: Uint8Array | string): ParsedMessage {
     instructions,
     recentBlockhash,
     hasAddressLookups,
-    unresolvedLookupTables: altWritableCount + altReadonlyCount > 0,
+    unresolvedLookupTables: anyUnresolved,
+    lookupTableKeys: altLookups.map((t) => t.key),
     messageBytes,
   };
 }

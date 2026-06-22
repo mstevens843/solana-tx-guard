@@ -1,11 +1,13 @@
-import { programIds, type ProgramCapability } from "@txshield/core";
+import { type ProgramCapability, programIds } from "@txshield/core";
 import { describe, expect, it } from "vitest";
 import { analyzeCpi } from "../src/cpi.js";
 import type { NormalizedInnerIx } from "../src/types.js";
 
 const USER = "USER";
 const JUP = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
-const caps = new Map<string, ProgramCapability>([[JUP, { transferToken: true, transferSol: true }]]);
+const caps = new Map<string, ProgramCapability>([
+  [JUP, { transferToken: true, transferSol: true }],
+]);
 const b64 = (arr: number[]) => Buffer.from(arr).toString("base64");
 
 describe("analyzeCpi — per-program capability model", () => {

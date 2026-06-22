@@ -1,18 +1,18 @@
 // @txshield/core — public API. Hand it raw transaction bytes (Uint8Array or base64) and get a
 // RiskReport. No network is required for the static verdict; simulation is additive enrichment.
 
-import type { AnalyzeOptions, RiskReport } from "./types.js";
 import { decodeTransaction } from "./decode/normalize.js";
 import { buildContext } from "./engine/context.js";
 import { evaluateRules } from "./engine/evaluate.js";
 import { buildReport } from "./report/riskReport.js";
 import { defaultRules } from "./rules/index.js";
 import { exposesUserWritableToOpaqueProgram } from "./rules/shared.js";
+import type { AnalyzeOptions, RiskReport } from "./types.js";
 
 export function analyze(input: Uint8Array | string, options: AnalyzeOptions = {}): RiskReport {
   let tx: ReturnType<typeof decodeTransaction>;
   try {
-    tx = decodeTransaction(input);
+    tx = decodeTransaction(input, options.lookupTables);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     return buildReport(
@@ -42,15 +42,14 @@ export function analyze(input: Uint8Array | string, options: AnalyzeOptions = {}
 
   const atomicGuardRecommended =
     exposesUserWritableToOpaqueProgram(ctx) ||
-    findings.some(
-      (f) => f.kind === "opaque-cpi-surface" || f.kind === "unknown-program-writable",
-    );
+    findings.some((f) => f.kind === "opaque-cpi-surface" || f.kind === "unknown-program-writable");
 
   return buildReport(tx.version, findings, {
     failClosed: false,
     fullySigned: tx.isFullySigned,
     hasAddressLookups: tx.hasAddressLookups,
     atomicGuardRecommended,
+    expectedStateChanges: options.simulation?.expectedStateChanges,
   });
 }
 
@@ -76,6 +75,7 @@ export {
   token2022GuardRule,
   decoyBundleRule,
   spoofedAtaRule,
+  denylistRule,
   undecodedSensitiveRule,
   unknownProgramWritableRule,
   partialSignRule,

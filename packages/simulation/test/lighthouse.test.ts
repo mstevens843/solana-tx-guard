@@ -31,8 +31,22 @@ const diff: AccountDiff[] = [
   {
     address: ATA,
     isTokenAccount: true,
-    preToken: { mint: MINT, owner: USER, amount: 1000n, delegate: null, state: 1, closeAuthority: null },
-    postToken: { mint: MINT, owner: USER, amount: 900n, delegate: null, state: 1, closeAuthority: null },
+    preToken: {
+      mint: MINT,
+      owner: USER,
+      amount: 1000n,
+      delegate: null,
+      state: 1,
+      closeAuthority: null,
+    },
+    postToken: {
+      mint: MINT,
+      owner: USER,
+      amount: 900n,
+      delegate: null,
+      state: 1,
+      closeAuthority: null,
+    },
   },
 ];
 

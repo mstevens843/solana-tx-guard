@@ -1,50 +1,54 @@
 import { useState } from "react";
-import { useTxShield } from "@txshield/react";
-import { EXAMPLES } from "./buildExamples";
-import { ResultView } from "./ResultView";
+import { ShieldIcon } from "./icons";
+import { PasteDemo } from "./PasteDemo";
+import { SwapDemo } from "./SwapDemo";
+import { WalletPanel } from "./WalletPanel";
+import { WalletProvider } from "./WalletContext";
 
 export function App() {
-  const [input, setInput] = useState("");
-  const trimmed = input.trim();
-  const { report } = useTxShield(trimmed || null);
+  const [tab, setTab] = useState<"swap" | "paste">("swap");
 
   return (
     <div className="app">
       <header>
-        <h1>🛡️ TxShield</h1>
-        <p className="tag">
-          Open Solana transaction-safety. Paste a transaction (base64) or try a sample — the
-          analysis runs <strong>entirely in your browser</strong>, no backend.
-        </p>
+        <h1>
+          <span className="brand-mark">
+            <ShieldIcon size={26} />
+          </span>
+          TxShield
+        </h1>
+        <p className="sub">Open Solana transaction-safety — see if a transaction is safe before you sign.</p>
       </header>
 
-      <div className="examples">
-        {EXAMPLES.map((e) => (
-          <button
-            key={e.label}
-            type="button"
-            className="chip"
-            title={e.description}
-            onClick={() => setInput(e.base64)}
-          >
-            {e.label}
-          </button>
-        ))}
+      <div className="tabs">
+        <button
+          type="button"
+          className={tab === "swap" ? "tab active" : "tab"}
+          onClick={() => setTab("swap")}
+        >
+          Try a real swap
+        </button>
+        <button
+          type="button"
+          className={tab === "paste" ? "tab active" : "tab"}
+          onClick={() => setTab("paste")}
+        >
+          Check a transaction
+        </button>
       </div>
 
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Paste a base64-encoded Solana transaction…"
-        rows={5}
-        spellCheck={false}
-      />
-
-      {report && <ResultView report={report} />}
+      {tab === "swap" ? (
+        <WalletProvider>
+          <WalletPanel />
+          <SwapDemo />
+        </WalletProvider>
+      ) : (
+        <PasteDemo />
+      )}
 
       <footer>
-        Static analysis only. For inner-CPI detection + on-chain enforcement (the Lighthouse
-        atomic-guard), add <code>@txshield/simulation</code>.
+        Static analysis runs in your browser. For inner-CPI detection + on-chain enforcement (the
+        Lighthouse atomic-guard), add <code>@txshield/simulation</code>.
       </footer>
     </div>
   );

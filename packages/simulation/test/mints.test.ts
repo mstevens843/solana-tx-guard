@@ -27,7 +27,9 @@ describe("inspectToken2022Mints", () => {
   it("flags a permanent-delegate mint as CRITICAL", async () => {
     const rpc = rpcReturning(programIds.TOKEN_2022_PROGRAM, mintWithPermanentDelegate());
     const findings = await inspectToken2022Mints(rpc, ["MINT"]);
-    expect(findings.some((f) => f.kind === "token2022-permanent-delegate" && f.severity === "CRITICAL")).toBe(true);
+    expect(
+      findings.some((f) => f.kind === "token2022-permanent-delegate" && f.severity === "CRITICAL"),
+    ).toBe(true);
   });
 
   it("ignores a normal SPL Token mint (not Token-2022)", async () => {

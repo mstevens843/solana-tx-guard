@@ -22,7 +22,11 @@ function tokenAccountBytes(ownerB58: string, mintB58: string): Uint8Array {
 function rpcOwnedBy(ownerB58: string): SimRpc {
   return {
     getAccounts: async () => [
-      { lamports: 2_039_280, owner: programIds.TOKEN_PROGRAM, dataBase64: b64(tokenAccountBytes(ownerB58, MINT)) },
+      {
+        lamports: 2_039_280,
+        owner: programIds.TOKEN_PROGRAM,
+        dataBase64: b64(tokenAccountBytes(ownerB58, MINT)),
+      },
     ],
     simulateTransaction: async () => ({ ok: true, logs: [], accounts: [] }),
   };
@@ -30,12 +34,22 @@ function rpcOwnedBy(ownerB58: string): SimRpc {
 
 describe("verifyTokenAccounts", () => {
   it("flags a token account whose real owner is not the user as CRITICAL (spoofed)", async () => {
-    const findings = await verifyTokenAccounts(rpcOwnedBy(ATTACKER), [{ account: "ACC", mint: MINT }], USER);
-    expect(findings.some((f) => f.kind === "spoofed-token-account" && f.severity === "CRITICAL")).toBe(true);
+    const findings = await verifyTokenAccounts(
+      rpcOwnedBy(ATTACKER),
+      [{ account: "ACC", mint: MINT }],
+      USER,
+    );
+    expect(
+      findings.some((f) => f.kind === "spoofed-token-account" && f.severity === "CRITICAL"),
+    ).toBe(true);
   });
 
   it("warns when the user owns the account but it is not the canonical ATA", async () => {
-    const findings = await verifyTokenAccounts(rpcOwnedBy(USER), [{ account: "ACC", mint: MINT }], USER);
+    const findings = await verifyTokenAccounts(
+      rpcOwnedBy(USER),
+      [{ account: "ACC", mint: MINT }],
+      USER,
+    );
     expect(findings.some((f) => f.kind === "non-canonical-token-account")).toBe(true);
   });
 });

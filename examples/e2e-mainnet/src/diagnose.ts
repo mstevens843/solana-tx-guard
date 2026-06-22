@@ -42,7 +42,11 @@ async function main(): Promise<void> {
   data("HELIUS_RPC_URL", maskUrl(HELIUS));
   data("JUP_ULTRA_BASE", process.env.JUP_ULTRA_BASE ?? "(unset)");
   data("JUP_API_KEY", mask(process.env.JUP_API_KEY));
-  record(1, "Environment", HELIUS ? ok("HELIUS_RPC_URL set") : fail("HELIUS_RPC_URL missing — set it in .env"));
+  record(
+    1,
+    "Environment",
+    HELIUS ? ok("HELIUS_RPC_URL set") : fail("HELIUS_RPC_URL missing — set it in .env"),
+  );
   if (!HELIUS) finishAndExit();
 
   // ── STEP 2 — RPC reachability ─────────────────────────────────────────────
@@ -74,7 +78,9 @@ async function main(): Promise<void> {
   record(
     3,
     "Static analyzer self-test",
-    correct === EXAMPLES.length ? ok("all examples classified correctly") : fail(`${EXAMPLES.length - correct} mismatched`),
+    correct === EXAMPLES.length
+      ? ok("all examples classified correctly")
+      : fail(`${EXAMPLES.length - correct} mismatched`),
   );
 
   // fee payer for the on-chain steps (degrade gracefully if it can't be fetched)
@@ -108,7 +114,9 @@ async function main(): Promise<void> {
   let provePass = false;
   try {
     data("fee payer", feePayer || "(none — using USDC mint)");
-    const falseSim = await simulate(buildAssertionTx(feePayer || USDC, 0n, IntegerOperator.Equal).wire);
+    const falseSim = await simulate(
+      buildAssertionTx(feePayer || USDC, 0n, IntegerOperator.Equal).wire,
+    );
     const trueSim = await simulate(
       buildAssertionTx(feePayer || USDC, 0n, IntegerOperator.GreaterThanOrEqual).wire,
     );
@@ -138,10 +146,16 @@ async function main(): Promise<void> {
   let jupPass = false;
   try {
     const taker = feePayer || USDC;
-    data("request", `${ULTRA}/order?inputMint=SOL&outputMint=USDC&amount=1000000&taker=${taker} (key ${mask(JUP_KEY)})`);
-    const res = await fetch(`${ULTRA}/order?inputMint=${SOL}&outputMint=${USDC}&amount=1000000&taker=${taker}`, {
-      headers: JUP_KEY ? { "x-api-key": JUP_KEY } : {},
-    });
+    data(
+      "request",
+      `${ULTRA}/order?inputMint=SOL&outputMint=USDC&amount=1000000&taker=${taker} (key ${mask(JUP_KEY)})`,
+    );
+    const res = await fetch(
+      `${ULTRA}/order?inputMint=${SOL}&outputMint=${USDC}&amount=1000000&taker=${taker}`,
+      {
+        headers: JUP_KEY ? { "x-api-key": JUP_KEY } : {},
+      },
+    );
     data("http status", res.status);
     const order = await res.json();
     data("response keys", Object.keys(order).join(", "));
@@ -163,7 +177,10 @@ async function main(): Promise<void> {
       const report = analyze(swapTx, { user: feePayer || undefined });
       data("action", `${report.action} (${report.resultType})`);
       data("atomicGuardRecommended", report.meta.atomicGuardRecommended);
-      data("version / hasAddressLookups", `${report.meta.version} / ${report.meta.hasAddressLookups}`);
+      data(
+        "version / hasAddressLookups",
+        `${report.meta.version} / ${report.meta.hasAddressLookups}`,
+      );
       data("findings", report.warnings.map((w) => `${w.severity}:${w.kind}`).join(", ") || "none");
       analyzePass = ok("analyzed the real swap transaction");
     } catch (e) {

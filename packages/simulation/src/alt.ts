@@ -3,7 +3,7 @@
 // resolves once at review and once at submit; `changed` ⇒ hard-block. `mutable` flags a table
 // whose authority hasn't been renounced (it can still change before landing).
 
-import { bytes, toBase58 } from "@txshield/core";
+import { bytes, decodeTransaction, toBase58 } from "@txshield/core";
 import type { SimRpc } from "./types.js";
 
 export interface AltLookup {
@@ -66,5 +66,27 @@ export async function resolveLookups(rpc: SimRpc, lookups: AltLookup[]): Promise
 const arrEq = (x: string[], y: string[]) => x.length === y.length && x.every((v, i) => v === y[i]);
 
 export function verifyAltUnchanged(before: ResolvedAlt, after: ResolvedAlt): { changed: boolean } {
-  return { changed: !(arrEq(before.writable, after.writable) && arrEq(before.readonly, after.readonly)) };
+  return {
+    changed: !(arrEq(before.writable, after.writable) && arrEq(before.readonly, after.readonly)),
+  };
+}
+
+/**
+ * Turnkey ALT resolver: read the tx's lookup tables from an RPC and return their full address
+ * lists, ready to pass into `analyze({ lookupTables })` / `simulateAndDiff({ lookupTables })`.
+ * Clears the `unresolved-lookup-table` warning. Returns undefined if the tx references no ALTs.
+ */
+export async function resolveLookupTables(
+  rpc: SimRpc,
+  base64Tx: string,
+): Promise<ReadonlyMap<string, readonly string[]> | undefined> {
+  const keys = decodeTransaction(base64Tx).lookupTableKeys;
+  if (keys.length === 0) return undefined;
+  const snaps = await rpc.getAccounts(keys);
+  const map = new Map<string, string[]>();
+  keys.forEach((key, i) => {
+    const snap = snaps[i];
+    if (snap?.dataBase64) map.set(key, decodeAddressLookupTable(snap.dataBase64).addresses);
+  });
+  return map.size > 0 ? map : undefined;
 }

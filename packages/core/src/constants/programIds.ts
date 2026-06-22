@@ -42,7 +42,4 @@ export const CORE_VALUE_CAPABLE_PROGRAMS: ReadonlySet<string> = new Set([
 ]);
 
 /** Inert programs that never move user value — safe to ignore for exfil-surface rules. */
-export const INERT_PROGRAMS: ReadonlySet<string> = new Set([
-  COMPUTE_BUDGET_PROGRAM,
-  MEMO_PROGRAM,
-]);
+export const INERT_PROGRAMS: ReadonlySet<string> = new Set([COMPUTE_BUDGET_PROGRAM, MEMO_PROGRAM]);

@@ -1,11 +1,14 @@
 // Orchestrates the wire parse + per-instruction decode into a single DecodedTransaction.
 
 import type { DecodedInstruction, DecodedTransaction } from "../types.js";
-import { parseMessage } from "./parseMessage.js";
 import { decodeInstruction } from "./instructions.js";
+import { parseMessage } from "./parseMessage.js";
 
-export function decodeTransaction(input: Uint8Array | string): DecodedTransaction {
-  const pm = parseMessage(input);
+export function decodeTransaction(
+  input: Uint8Array | string,
+  lookupTables?: ReadonlyMap<string, readonly string[]>,
+): DecodedTransaction {
+  const pm = parseMessage(input, lookupTables);
 
   const instructions: DecodedInstruction[] = pm.instructions.map((raw, index) => {
     const programAccount = pm.accounts[raw.programIdIndex]!;
@@ -35,6 +38,7 @@ export function decodeTransaction(input: Uint8Array | string): DecodedTransactio
     recentBlockhash: pm.recentBlockhash,
     hasAddressLookups: pm.hasAddressLookups,
     unresolvedLookupTables: pm.unresolvedLookupTables,
+    lookupTableKeys: pm.lookupTableKeys,
     messageBytes: pm.messageBytes,
   };
 }

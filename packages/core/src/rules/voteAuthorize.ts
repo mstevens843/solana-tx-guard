@@ -1,8 +1,8 @@
 // R20 — Vote account authority change / withdraw (validator-operator wallets). Lower-frequency
 // for normal users, so WARNING.
 
-import type { Finding, Rule } from "../types.js";
 import { VOTE_PROGRAM } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 
 const FLAGGED = new Set([
   "Authorize",

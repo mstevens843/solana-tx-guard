@@ -4,12 +4,12 @@
 // to enable simulation + atomic-guard for a hard, on-chain guarantee. Allowlist is a label,
 // never a CPI-safety grant (see SECURITY.md).
 
-import type { Finding, Rule } from "../types.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM,
   CORE_VALUE_CAPABLE_PROGRAMS,
   INERT_PROGRAMS,
 } from "../constants/programIds.js";
+import type { Finding, Rule } from "../types.js";
 import { ixTouchesUserWritable } from "./shared.js";
 
 export const unknownProgramWritableRule: Rule = {
