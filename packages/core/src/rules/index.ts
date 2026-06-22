@@ -7,6 +7,7 @@ import { closeAccountRule } from "./closeAccount.js";
 import { decoyBundleRule } from "./decoyBundle.js";
 import { denylistRule } from "./denylist.js";
 import { durableNonceRule } from "./durableNonce.js";
+import { lookalikeAddressRule } from "./lookalikeAddress.js";
 import { nonceAuthorityRule } from "./nonceAuthority.js";
 import { partialSignRule } from "./partialSign.js";
 import { programUpgradeRule } from "./programUpgrade.js";
@@ -37,6 +38,7 @@ export const defaultRules: Rule[] = [
   decoyBundleRule,
   spoofedAtaRule,
   denylistRule,
+  lookalikeAddressRule,
   undecodedSensitiveRule,
   unknownProgramWritableRule,
   partialSignRule,
@@ -58,6 +60,7 @@ export {
   decoyBundleRule,
   spoofedAtaRule,
   denylistRule,
+  lookalikeAddressRule,
   undecodedSensitiveRule,
   unknownProgramWritableRule,
   partialSignRule,

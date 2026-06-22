@@ -36,13 +36,19 @@ async function resolveLookupTables(
   } catch {
     return undefined;
   }
-  const infos = await rpc("getMultipleAccounts", [keys, { encoding: "base64", commitment: "confirmed" }]);
+  const infos = await rpc("getMultipleAccounts", [
+    keys,
+    { encoding: "base64", commitment: "confirmed" },
+  ]);
   const map = new Map<string, string[]>();
   for (let i = 0; i < keys.length; i++) {
     const d = infos?.value?.[i]?.data?.[0];
     if (!d) continue;
     try {
-      map.set(keys[i] as string, AddressLookupTableAccount.deserialize(b64ToBytes(d)).addresses.map((a) => a.toBase58()));
+      map.set(
+        keys[i] as string,
+        AddressLookupTableAccount.deserialize(b64ToBytes(d)).addresses.map((a) => a.toBase58()),
+      );
     } catch {
       // skip
     }
@@ -88,7 +94,10 @@ async function main(): Promise<void> {
             blocks.push({
               program: label,
               sig: s.signature,
-              rules: r.warnings.filter((w) => w.severity === "CRITICAL").map((w) => w.kind).join(", "),
+              rules: r.warnings
+                .filter((w) => w.severity === "CRITICAL")
+                .map((w) => w.kind)
+                .join(", "),
             });
           }
         } catch {
@@ -111,15 +120,16 @@ async function main(): Promise<void> {
     total += t.n;
   }
   console.log(
-    `\n   Real-traffic BLOCK rate: ${blk}/${total} = ${total ? ((blk / total) * 100).toFixed(1) : "0"}%  ` +
-      "(BLOCKs on confirmed-legit txs — investigate each)",
+    `\n   Real-traffic BLOCK rate: ${blk}/${total} = ${total ? ((blk / total) * 100).toFixed(1) : "0"}%  (BLOCKs on confirmed-legit txs — investigate each)`,
   );
   if (blocks.length > 0) {
     console.log("\n   BLOCK cases to review:");
     for (const b of blocks) {
       console.log(`    • ${b.program}: [${b.rules}] https://solscan.io/tx/${b.sig}`);
     }
-    note("(a BLOCK on a legit tx may be a correct fail-closed call — e.g. a real SetAuthority — or an over-aggressive rule)");
+    note(
+      "(a BLOCK on a legit tx may be a correct fail-closed call — e.g. a real SetAuthority — or an over-aggressive rule)",
+    );
   } else {
     ok("No legit transaction was BLOCKed in this sample — no false positives.");
   }

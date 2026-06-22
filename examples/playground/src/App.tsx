@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { ShieldIcon } from "./icons";
 import { PasteDemo } from "./PasteDemo";
 import { SwapDemo } from "./SwapDemo";
-import { WalletPanel } from "./WalletPanel";
 import { WalletProvider } from "./WalletContext";
+import { WalletPanel } from "./WalletPanel";
+import { ShieldIcon } from "./icons";
 
 export function App() {
   const [tab, setTab] = useState<"swap" | "paste">("swap");
@@ -17,7 +17,9 @@ export function App() {
           </span>
           TxShield
         </h1>
-        <p className="sub">Open Solana transaction-safety — see if a transaction is safe before you sign.</p>
+        <p className="sub">
+          Open Solana transaction-safety — see if a transaction is safe before you sign.
+        </p>
       </header>
 
       <div className="tabs">

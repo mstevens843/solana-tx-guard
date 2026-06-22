@@ -12,7 +12,12 @@ import type { AccountDiff } from "./types.js";
 // Does the user receive any value (SOL up, or any owned token amount increases / a new funded ATA)?
 function userReceivesInflow(diff: AccountDiff[], user: string): boolean {
   return diff.some((d) => {
-    if (d.address === user && d.preLamports != null && d.postLamports != null && d.postLamports > d.preLamports) {
+    if (
+      d.address === user &&
+      d.preLamports != null &&
+      d.postLamports != null &&
+      d.postLamports > d.preLamports
+    ) {
       return true;
     }
     const owner = d.postToken?.owner ?? d.preToken?.owner;

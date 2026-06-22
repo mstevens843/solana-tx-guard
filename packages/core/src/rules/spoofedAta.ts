@@ -5,11 +5,7 @@
 
 import { CANONICAL_MINTS } from "../constants/programIds.js";
 import type { Finding, Rule } from "../types.js";
-
-function looksLike(addr: string, canonical: string): boolean {
-  if (addr === canonical || addr.length < 12) return false;
-  return addr.slice(0, 6) === canonical.slice(0, 6) && addr.slice(-6) === canonical.slice(-6);
-}
+import { isLookalike } from "../util/lookalike.js";
 
 export const spoofedAtaRule: Rule = {
   id: "R13_LOOKALIKE_MINT",
@@ -21,7 +17,7 @@ export const spoofedAtaRule: Rule = {
       const addr = acc.address;
       if (CANONICAL_MINTS.has(addr) || seen.has(addr)) continue;
       for (const canonical of CANONICAL_MINTS) {
-        if (looksLike(addr, canonical)) {
+        if (isLookalike(addr, canonical)) {
           seen.add(addr);
           out.push({
             id: "R13_LOOKALIKE_MINT",

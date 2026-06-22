@@ -12,11 +12,11 @@ import {
 } from "@txshield/registry";
 import type { TokenMeta } from "@txshield/simulation";
 import { useMemo, useState } from "react";
+import { TokenSelect } from "./TokenSelect";
+import { useWallet } from "./WalletContext";
 import { FlipIcon } from "./icons";
 import { buildSwapOrder, confirmSignature, executeSwap, getDecimals, makeSimRpc } from "./jupiter";
 import { SOL_MINT, type Token, USDC_MINT } from "./tokens";
-import { TokenSelect } from "./TokenSelect";
-import { useWallet } from "./WalletContext";
 import { signTx } from "./wallet";
 
 const DEFAULT_FROM: Token = { mint: SOL_MINT, symbol: "SOL", name: "Solana", decimals: 9 };
@@ -110,7 +110,10 @@ export function SwapDemo() {
       await build();
       setOutcome(null);
     } catch (e) {
-      setOutcome({ status: "error", message: `rebuild failed: ${e instanceof Error ? e.message : String(e)}` });
+      setOutcome({
+        status: "error",
+        message: `rebuild failed: ${e instanceof Error ? e.message : String(e)}`,
+      });
     } finally {
       setRebuilding(false);
     }
@@ -128,17 +131,37 @@ export function SwapDemo() {
         const conf = await confirmSignature(res.signature);
         setOutcome(
           conf.confirmed
-            ? { status: "success", message: "Swap confirmed on-chain.", signature: res.signature, explorerUrl: solscan(res.signature) }
-            : { status: "error", message: `submitted but failed on-chain: ${conf.err}`, signature: res.signature, explorerUrl: solscan(res.signature) },
+            ? {
+                status: "success",
+                message: "Swap confirmed on-chain.",
+                signature: res.signature,
+                explorerUrl: solscan(res.signature),
+              }
+            : {
+                status: "error",
+                message: `submitted but failed on-chain: ${conf.err}`,
+                signature: res.signature,
+                explorerUrl: solscan(res.signature),
+              },
         );
         setTimeout(refresh, 1500);
       } else {
-        const expired = !res.status || /expire|blockhash|block height|not.*processed/i.test(res.error ?? "");
+        const expired =
+          !res.status || /expire|blockhash|block height|not.*processed/i.test(res.error ?? "");
         if (expired) {
-          setOutcome({ status: "expired", message: "The quote expired (valid ~60–90s). Rebuild a fresh, re-checked transaction." });
+          setOutcome({
+            status: "expired",
+            message: "The quote expired (valid ~60–90s). Rebuild a fresh, re-checked transaction.",
+          });
         } else {
-          const reason = res.error || (res.code != null ? `error code ${res.code}` : `status: ${res.status}`);
-          setOutcome({ status: "error", message: reason, signature: res.signature, explorerUrl: solscan(res.signature) });
+          const reason =
+            res.error || (res.code != null ? `error code ${res.code}` : `status: ${res.status}`);
+          setOutcome({
+            status: "error",
+            message: reason,
+            signature: res.signature,
+            explorerUrl: solscan(res.signature),
+          });
         }
       }
     } catch (e) {
@@ -186,7 +209,9 @@ export function SwapDemo() {
         <input type="checkbox" checked={trustApp} onChange={(e) => setTrustApp(e.target.checked)} />
         <span>
           Trust this app's programs{" "}
-          <em>— how a developer configures TxShield; their own flows then show clean. Off = strict.</em>
+          <em>
+            — how a developer configures TxShield; their own flows then show clean. Off = strict.
+          </em>
         </span>
       </label>
 

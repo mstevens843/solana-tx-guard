@@ -116,6 +116,11 @@ export interface AnalyzeOptions {
   allowedPrograms?: ReadonlySet<string>;
   /** known-good delegate / recipient addresses (suppresses some counterparty findings). */
   allowedCounterparties?: ReadonlySet<string>;
+  /**
+   * Addresses the user recognizes (their own + saved contacts). A referenced address that is a
+   * base58 lookalike of one of these (but not it) is flagged as address-poisoning (R25).
+   */
+  knownAddresses?: ReadonlySet<string>;
   /** optional advisory simulation result; may only ADD findings, never clear them. */
   simulation?: SimulationContext;
   /** set true once Token-2022 mint extensions were inspected via RPC — suppresses the offline guard (R09). */

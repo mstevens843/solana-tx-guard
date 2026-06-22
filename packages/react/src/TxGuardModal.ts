@@ -4,10 +4,10 @@
 // variables (--txs-bg, --txs-surface, --txs-border, --txs-text, --txs-muted, --txs-accent, and the
 // verdict colors --txs-ok/--txs-warn/--txs-danger). Built with createElement (no JSX transform).
 
+import type { RiskReport } from "@txshield/core";
 import type { CSSProperties } from "react";
 import { createElement as h } from "react";
 import type { ReactElement, ReactNode } from "react";
-import type { RiskReport } from "@txshield/core";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -88,8 +88,7 @@ function palette(theme: "dark" | "light", accent?: string) {
   };
 }
 
-const FONT =
-  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, system-ui, sans-serif';
+const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, system-ui, sans-serif';
 
 function findingColor(severity: "INFO" | "WARNING" | "CRITICAL"): string {
   if (severity === "CRITICAL") return "var(--txs-danger, #f0506e)";
@@ -131,19 +130,33 @@ export function TxGuardModal(props: TxGuardModalProps): ReactElement | null {
       h(
         "div",
         { key: "l", style: { display: "flex", alignItems: "center", gap: 10, minWidth: 0 } },
-        h("span", { key: "ic", style: { color: p.accent, display: "flex" } }, ShieldIcon({ size: 20, color: p.accent })),
+        h(
+          "span",
+          { key: "ic", style: { color: p.accent, display: "flex" } },
+          ShieldIcon({ size: 20, color: p.accent }),
+        ),
         h(
           "div",
           { key: "t", style: { minWidth: 0 } },
           h("div", { key: "tt", style: { fontWeight: 600, fontSize: 15, color: p.text } }, title),
           subtitle
-            ? h("div", { key: "st", style: { fontSize: 12.5, color: p.muted, marginTop: 2 } }, subtitle)
+            ? h(
+                "div",
+                { key: "st", style: { fontSize: 12.5, color: p.muted, marginTop: 2 } },
+                subtitle,
+              )
             : null,
         ),
       ),
       h(
         "button",
-        { key: "x", type: "button", "aria-label": "Close", onClick: onCancel, style: styles.iconBtn(p) },
+        {
+          key: "x",
+          type: "button",
+          "aria-label": "Close",
+          onClick: onCancel,
+          style: styles.iconBtn(p),
+        },
         XIcon({ size: 18, color: p.muted }),
       ),
     ),
@@ -173,14 +186,28 @@ export function TxGuardModal(props: TxGuardModalProps): ReactElement | null {
                 : ArrowDownIcon({ size: 15, color: p.muted });
             return h(
               "div",
-              { key: `${s}-${i}`, style: { display: "flex", alignItems: "center", gap: 8, fontSize: 14, color, fontWeight: warn ? 600 : 500 } },
+              {
+                key: `${s}-${i}`,
+                style: {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 14,
+                  color,
+                  fontWeight: warn ? 600 : 500,
+                },
+              },
               h("span", { key: "i", style: { display: "flex", flexShrink: 0 } }, icon),
               h("span", { key: "s" }, s),
             );
           }),
         ),
         report?.meta.atomicGuardRecommended
-          ? h("div", { key: "guard", style: styles.guardNote(p) }, "With the atomic-guard attached, these outcomes are pinned on-chain — a divergent execution reverts.")
+          ? h(
+              "div",
+              { key: "guard", style: styles.guardNote(p) },
+              "With the atomic-guard attached, these outcomes are pinned on-chain — a divergent execution reverts.",
+            )
           : null,
       ),
     );
@@ -196,34 +223,98 @@ export function TxGuardModal(props: TxGuardModalProps): ReactElement | null {
         h(
           "div",
           { key: "badge", style: styles.badge(verdict.color) },
-          h("span", { key: "i", style: { display: "flex" } }, verdictIcon(verdict.tone, { size: 16, color: verdict.color })),
+          h(
+            "span",
+            { key: "i", style: { display: "flex" } },
+            verdictIcon(verdict.tone, { size: 16, color: verdict.color }),
+          ),
           h("span", { key: "t" }, `${report.action} — ${report.resultType}`),
         ),
-        h("div", { key: "meta", style: { fontSize: 11.5, color: p.muted, marginTop: 8, fontFamily: "ui-monospace, monospace" } }, metaLine),
+        h(
+          "div",
+          {
+            key: "meta",
+            style: {
+              fontSize: 11.5,
+              color: p.muted,
+              marginTop: 8,
+              fontFamily: "ui-monospace, monospace",
+            },
+          },
+          metaLine,
+        ),
         report.warnings.length > 0
           ? h(
               "div",
-              { key: "findings", style: { display: "flex", flexDirection: "column", gap: 10, marginTop: 12 } },
+              {
+                key: "findings",
+                style: { display: "flex", flexDirection: "column", gap: 10, marginTop: 12 },
+              },
               ...report.warnings.map((w, i) => {
                 const c = findingColor(w.severity);
                 return h(
                   "div",
-                  { key: `${w.id}-${i}`, style: { display: "flex", gap: 9, paddingLeft: 10, borderLeft: `2px solid ${c}` } },
-                  h("span", { key: "i", style: { display: "flex", flexShrink: 0, marginTop: 1, color: c } }, severityIcon(w.severity, { size: 15, color: c })),
+                  {
+                    key: `${w.id}-${i}`,
+                    style: {
+                      display: "flex",
+                      gap: 9,
+                      paddingLeft: 10,
+                      borderLeft: `2px solid ${c}`,
+                    },
+                  },
+                  h(
+                    "span",
+                    { key: "i", style: { display: "flex", flexShrink: 0, marginTop: 1, color: c } },
+                    severityIcon(w.severity, { size: 15, color: c }),
+                  ),
                   h(
                     "div",
                     { key: "t", style: { minWidth: 0 } },
-                    h("div", { key: "k", style: { fontSize: 11, letterSpacing: "0.03em", textTransform: "uppercase", color: p.muted } }, `${w.severity} · ${w.kind}`),
-                    h("div", { key: "m", style: { fontSize: 13.5, color: p.text, marginTop: 2, lineHeight: 1.45 } }, w.message),
+                    h(
+                      "div",
+                      {
+                        key: "k",
+                        style: {
+                          fontSize: 11,
+                          letterSpacing: "0.03em",
+                          textTransform: "uppercase",
+                          color: p.muted,
+                        },
+                      },
+                      `${w.severity} · ${w.kind}`,
+                    ),
+                    h(
+                      "div",
+                      {
+                        key: "m",
+                        style: { fontSize: 13.5, color: p.text, marginTop: 2, lineHeight: 1.45 },
+                      },
+                      w.message,
+                    ),
                   ),
                 );
               }),
             )
-          : h("div", { key: "clean", style: { fontSize: 13, color: p.muted, marginTop: 10 } }, "No risks detected in this transaction."),
+          : h(
+              "div",
+              { key: "clean", style: { fontSize: 13, color: p.muted, marginTop: 10 } },
+              "No risks detected in this transaction.",
+            ),
         loading
           ? h(
               "div",
-              { key: "loading", style: { display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, color: p.muted, marginTop: 12 } },
+              {
+                key: "loading",
+                style: {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 12.5,
+                  color: p.muted,
+                  marginTop: 12,
+                },
+              },
               SpinnerIcon({ size: 14, color: p.muted }),
               "Simulating on-chain…",
             )
@@ -256,12 +347,21 @@ export function TxGuardModal(props: TxGuardModalProps): ReactElement | null {
             style: styles.primaryBtn(p, confirmDisabled),
           },
           busy
-            ? h("span", { key: "b", style: { display: "inline-flex", alignItems: "center", gap: 8 } }, SpinnerIcon({ size: 15, color: "#fff" }), "Working…")
+            ? h(
+                "span",
+                { key: "b", style: { display: "inline-flex", alignItems: "center", gap: 8 } },
+                SpinnerIcon({ size: 15, color: "#fff" }),
+                "Working…",
+              )
             : isBlocked && !allowBlocked
               ? "Blocked by TxShield"
               : confirmLabel,
         ),
-        h("button", { key: "cancel", type: "button", onClick: onCancel, style: styles.ghostBtn(p) }, cancelLabel),
+        h(
+          "button",
+          { key: "cancel", type: "button", onClick: onCancel, style: styles.ghostBtn(p) },
+          cancelLabel,
+        ),
       ),
     );
   }
@@ -270,11 +370,7 @@ export function TxGuardModal(props: TxGuardModalProps): ReactElement | null {
     "div",
     { role: "dialog", "aria-modal": true, onClick: onCancel, style: styles.overlay(p) },
     h("style", { key: "kf" }, "@keyframes txs-spin{to{transform:rotate(360deg)}}"),
-    h(
-      "div",
-      { key: "panel", onClick: stop, style: styles.panelOuter(p) },
-      ...sections,
-    ),
+    h("div", { key: "panel", onClick: stop, style: styles.panelOuter(p) }, ...sections),
   );
 }
 
@@ -284,14 +380,35 @@ function stop(e: { stopPropagation: () => void }): void {
 
 function renderOutcome(o: TxGuardOutcome, p: ReturnType<typeof palette>): ReactElement {
   const color =
-    o.status === "success" ? "var(--txs-ok, #34d399)" : o.status === "expired" ? "var(--txs-warn, #f59e0b)" : "var(--txs-danger, #f0506e)";
-  const icon = o.status === "success" ? CheckCircleIcon({ size: 18, color }) : severityIcon("WARNING", { size: 18, color });
+    o.status === "success"
+      ? "var(--txs-ok, #34d399)"
+      : o.status === "expired"
+        ? "var(--txs-warn, #f59e0b)"
+        : "var(--txs-danger, #f0506e)";
+  const icon =
+    o.status === "success"
+      ? CheckCircleIcon({ size: 18, color })
+      : severityIcon("WARNING", { size: 18, color });
   const defaultMsg =
-    o.status === "success" ? "Transaction confirmed on-chain." : o.status === "expired" ? "The quote expired — rebuild a fresh, re-checked transaction." : "Transaction failed.";
+    o.status === "success"
+      ? "Transaction confirmed on-chain."
+      : o.status === "expired"
+        ? "The quote expired — rebuild a fresh, re-checked transaction."
+        : "Transaction failed.";
   const kids: ReactNode[] = [
     h(
       "div",
-      { key: "row", style: { display: "flex", alignItems: "center", gap: 9, color, fontWeight: 600, fontSize: 14 } },
+      {
+        key: "row",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 9,
+          color,
+          fontWeight: 600,
+          fontSize: 14,
+        },
+      },
       h("span", { key: "i", style: { display: "flex" } }, icon),
       h("span", { key: "m" }, o.message ?? defaultMsg),
     ),
@@ -300,7 +417,21 @@ function renderOutcome(o: TxGuardOutcome, p: ReturnType<typeof palette>): ReactE
     kids.push(
       h(
         "a",
-        { key: "link", href: o.explorerUrl, target: "_blank", rel: "noreferrer", style: { display: "inline-flex", alignItems: "center", gap: 5, fontSize: 13, color: p.accent, marginTop: 8, textDecoration: "none" } },
+        {
+          key: "link",
+          href: o.explorerUrl,
+          target: "_blank",
+          rel: "noreferrer",
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            fontSize: 13,
+            color: p.accent,
+            marginTop: 8,
+            textDecoration: "none",
+          },
+        },
         "View on explorer",
         ExternalLinkIcon({ size: 13, color: p.accent }),
       ),
@@ -310,9 +441,20 @@ function renderOutcome(o: TxGuardOutcome, p: ReturnType<typeof palette>): ReactE
     kids.push(
       h(
         "button",
-        { key: "rebuild", type: "button", disabled: o.rebuilding, onClick: o.onRebuild, style: { ...styles.primaryBtn(p, !!o.rebuilding), marginTop: 12 } },
+        {
+          key: "rebuild",
+          type: "button",
+          disabled: o.rebuilding,
+          onClick: o.onRebuild,
+          style: { ...styles.primaryBtn(p, !!o.rebuilding), marginTop: 12 },
+        },
         o.rebuilding
-          ? h("span", { key: "b", style: { display: "inline-flex", alignItems: "center", gap: 8 } }, SpinnerIcon({ size: 15, color: "#fff" }), "Rebuilding…")
+          ? h(
+              "span",
+              { key: "b", style: { display: "inline-flex", alignItems: "center", gap: 8 } },
+              SpinnerIcon({ size: 15, color: "#fff" }),
+              "Rebuilding…",
+            )
           : (o.rebuildLabel ?? "Rebuild & re-check"),
       ),
     );

@@ -2,10 +2,10 @@ import { analyze } from "@txshield/core";
 import type { RiskReport } from "@txshield/core";
 import { DEFAULT_DENYLISTS } from "@txshield/registry";
 import { useState } from "react";
+import { useWallet } from "./WalletContext";
 import { AlertIcon, KeyIcon, RefreshIcon } from "./icons";
 import { confirmSignature, getLatestBlockhash, sendRawTx } from "./jupiter";
 import { TOKENS } from "./tokens";
-import { useWallet } from "./WalletContext";
 import {
   buildTransferTx,
   clearWallet,
@@ -150,7 +150,14 @@ export function WalletPanel() {
           <button type="button" onClick={() => setShowSecret((v) => !v)}>
             Export key
           </button>
-          <button type="button" className="ghost" onClick={() => { clearWallet(); setKeypair(null); }}>
+          <button
+            type="button"
+            className="ghost"
+            onClick={() => {
+              clearWallet();
+              setKeypair(null);
+            }}
+          >
             Disconnect
           </button>
         </div>
@@ -177,7 +184,11 @@ export function WalletPanel() {
 
       {showSend && (
         <div className="send-box">
-          <input placeholder="recipient address" value={to} onChange={(e) => setTo(e.target.value)} />
+          <input
+            placeholder="recipient address"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          />
           <input
             type="number"
             value={sendAmt}
@@ -224,7 +235,8 @@ export function WalletPanel() {
       )}
 
       <p className="warn small">
-        <AlertIcon size={13} /> Throwaway test wallet — key stored in your browser. Small amounts only.
+        <AlertIcon size={13} /> Throwaway test wallet — key stored in your browser. Small amounts
+        only.
       </p>
     </div>
   );

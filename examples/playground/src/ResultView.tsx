@@ -1,5 +1,5 @@
 import type { RiskReport } from "@txshield/core";
-import { severityTheme, TxWarning, verdictIcon } from "@txshield/react";
+import { TxWarning, severityTheme, verdictIcon } from "@txshield/react";
 
 export function ResultView({ report }: { report: RiskReport }) {
   const theme = severityTheme(report.action);

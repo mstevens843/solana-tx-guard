@@ -31,8 +31,13 @@ designed-for but land with simulation + atomic-guard.
 | Co-signed / partial-sign deferred broadcast | R18 |
 | Stake / Vote / upgrade-authority hijack | R19/R20/R21 (currently fail-closed via R23) |
 | Lookalike program id (vanity / IDL-label spoof) | R22 — match by full 32-byte equality; protocol labels only from the trusted registry, never attacker IDL |
+| Address poisoning / lookalike recipient (victim copies a spoofed address from history) | R25 — a referenced address that shares the first-6 + last-6 base58 chars of the user's own or a known address (but is not it) ⇒ WARN; pass saved contacts via `knownAddresses` |
+| Lookalike token mint (fake USDC/JUP/BONK with a matching prefix/suffix) | R13 — anchored on the common spoofed mints (`CANONICAL_MINTS`); RPC `verifyTokenAccounts` adds real-owner + canonical-ATA checks |
 | Mutable ALT swapped between analyze() and broadcast | **(staged)** submit-time re-resolution is a hard precondition (capability handshake); mutable ALT ⇒ WARN; pin via Lighthouse |
 | Lighthouse atomic-guard size-exhaustion | **(staged)** when assertions can't fit on a user-writable-exposing tx, hard BLOCK (non-overridable) |
 | Token-2022 mint-extension honeypot read offline | R09–R13 — offline ⇒ WARN `token-2022-extensions-uninspected`, never Benign **(staged)** |
 
-Every confirmed bypass is captured as a permanent regression in `fixtures/adversarial/`.
+Every confirmed bypass — plus each real 2026 drain class (Drift durable-nonce, the Q1 Blink
+owner-reassignment, Q2 full-portfolio phishing bundles, CPI-laundered drains, address poisoning) —
+is captured as a permanent regression in `packages/core/test/realworld.test.ts`,
+`packages/simulation/test/realworld.test.ts`, and `fixtures/adversarial/`.

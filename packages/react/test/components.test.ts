@@ -1,12 +1,19 @@
+import type { RiskReport } from "@txshield/core";
 import type { ReactElement } from "react";
 import { describe, expect, it } from "vitest";
-import type { RiskReport } from "@txshield/core";
-import { ShieldIcon, severityTheme, TxGuardModal, TxWarning, verdictIcon } from "../src/index.js";
+import { ShieldIcon, TxGuardModal, TxWarning, severityTheme, verdictIcon } from "../src/index.js";
 
 const report: RiskReport = {
   action: "WARN",
   resultType: "Warning",
-  warnings: [{ id: "R01", severity: "WARNING", kind: "durable-nonce", message: "this transaction never expires" }],
+  warnings: [
+    {
+      id: "R01",
+      severity: "WARNING",
+      kind: "durable-nonce",
+      message: "this transaction never expires",
+    },
+  ],
   expectedStateChanges: ["Send 0.01 SOL", "Receive ~1.4 USDC"],
   validation: { classification: "warning", reason: "", features: [] },
   meta: {

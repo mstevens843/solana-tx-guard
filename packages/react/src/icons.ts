@@ -102,7 +102,15 @@ export function SpinnerIcon(p: IconProps = {}): ReactElement {
       "aria-hidden": true,
       style: { animation: "txs-spin 0.7s linear infinite" },
     },
-    h("circle", { key: "c", cx: 12, cy: 12, r: 9, stroke: color, strokeOpacity: 0.25, strokeWidth: 3 }),
+    h("circle", {
+      key: "c",
+      cx: 12,
+      cy: 12,
+      r: 9,
+      stroke: color,
+      strokeOpacity: 0.25,
+      strokeWidth: 3,
+    }),
     h("path", {
       key: "p",
       d: "M21 12a9 9 0 0 0-9-9",
@@ -119,6 +127,9 @@ export function verdictIcon(tone: VerdictTone, props: IconProps = {}): ReactElem
 }
 
 /** The icon for a finding severity. */
-export function severityIcon(severity: "INFO" | "WARNING" | "CRITICAL", props: IconProps = {}): ReactElement {
+export function severityIcon(
+  severity: "INFO" | "WARNING" | "CRITICAL",
+  props: IconProps = {},
+): ReactElement {
   return severity === "INFO" ? InfoIcon(props) : AlertTriangleIcon(props);
 }

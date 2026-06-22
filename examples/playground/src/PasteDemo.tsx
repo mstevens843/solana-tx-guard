@@ -1,7 +1,7 @@
 import { useTxShield } from "@txshield/react";
 import { useState } from "react";
-import { EXAMPLES } from "./buildExamples";
 import { ResultView } from "./ResultView";
+import { EXAMPLES } from "./buildExamples";
 
 export function PasteDemo() {
   const [input, setInput] = useState("");
@@ -11,9 +11,9 @@ export function PasteDemo() {
   return (
     <div className="paste">
       <p className="tag">
-        Manual / developer view: paste a base64 transaction (or click a crafted sample) — the analysis
-        runs <strong>entirely in your browser</strong>, no backend. For the realistic end-to-end flow,
-        use the <strong>Try a real swap</strong> tab.
+        Manual / developer view: paste a base64 transaction (or click a crafted sample) — the
+        analysis runs <strong>entirely in your browser</strong>, no backend. For the realistic
+        end-to-end flow, use the <strong>Try a real swap</strong> tab.
       </p>
 
       <div className="examples">

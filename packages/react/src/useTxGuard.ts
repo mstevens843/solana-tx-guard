@@ -1,12 +1,12 @@
 import { analyze } from "@txshield/core";
 import type { AnalyzeOptions, RiskReport } from "@txshield/core";
 import {
+  type SimRpc,
+  type TokenMeta,
   createSimulateFn,
   resolveLookupTables,
-  type SimRpc,
   simulateAndDiff,
   summarizeStateChanges,
-  type TokenMeta,
 } from "@txshield/simulation";
 import { useEffect, useRef, useState } from "react";
 
@@ -72,7 +72,12 @@ export function useTxGuard(
     try {
       staticReport = analyze(input, analyzeOptions);
     } catch (e) {
-      setState({ report: null, stateChanges: [], loading: false, error: e instanceof Error ? e.message : String(e) });
+      setState({
+        report: null,
+        stateChanges: [],
+        loading: false,
+        error: e instanceof Error ? e.message : String(e),
+      });
       return;
     }
 

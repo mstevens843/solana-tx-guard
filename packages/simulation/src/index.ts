@@ -71,7 +71,9 @@ export async function simulateAndDiff(
   const user = options.user ?? tx.feePayer;
   const tracked = [
     ...new Set(
-      tx.accounts.filter((a) => a.writable && !a.address.startsWith("lookup:")).map((a) => a.address),
+      tx.accounts
+        .filter((a) => a.writable && !a.address.startsWith("lookup:"))
+        .map((a) => a.address),
     ),
   ];
 

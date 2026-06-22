@@ -76,6 +76,7 @@ export {
   decoyBundleRule,
   spoofedAtaRule,
   denylistRule,
+  lookalikeAddressRule,
   undecodedSensitiveRule,
   unknownProgramWritableRule,
   partialSignRule,

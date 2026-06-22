@@ -109,7 +109,9 @@ export async function sendRawTx(b64: string): Promise<string> {
 
 // biome-ignore lint/suspicious/noExplicitAny: RPC account shape
 const toSnap = (a: any) =>
-  a ? { lamports: a.lamports, owner: a.owner, dataBase64: a.data?.[0], executable: a.executable } : null;
+  a
+    ? { lamports: a.lamports, owner: a.owner, dataBase64: a.data?.[0], executable: a.executable }
+    : null;
 
 // A browser SimRpc over Helius for @txshield/simulation (pre = getMultipleAccounts, post =
 // simulateTransaction). Inner-CPI normalization needs the resolved full account list (host adapter
@@ -201,7 +203,11 @@ export async function executeSwap(
   return {
     status: json.status,
     signature: json.signature,
-    error: json.error ?? json.errorMessage ?? json.message ?? (!res.ok ? `execute ${res.status}` : undefined),
+    error:
+      json.error ??
+      json.errorMessage ??
+      json.message ??
+      (!res.ok ? `execute ${res.status}` : undefined),
     code: json.code ?? json.errorCode,
   };
 }
@@ -212,7 +218,10 @@ export interface ConfirmResult {
 }
 
 // Poll the chain for the real outcome — the truth, not Ultra's optimistic signature.
-export async function confirmSignature(signature: string, timeoutMs = 35000): Promise<ConfirmResult> {
+export async function confirmSignature(
+  signature: string,
+  timeoutMs = 35000,
+): Promise<ConfirmResult> {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const r = await heliusRpc("getSignatureStatuses", [

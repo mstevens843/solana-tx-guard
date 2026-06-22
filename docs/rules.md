@@ -28,6 +28,8 @@ RPC mint/state read, `sim` = needs simulation.
 | R21 | Program upgrade-authority change / live Upgrade | static | CRITICAL | ✅ implemented |
 | R22 | Unknown / opaque program with writable user account | both | WARNING | ✅ implemented |
 | R23 | Undecoded sensitive instruction (fail-closed) | static | CRITICAL | ✅ implemented |
+| R24 | Known-drainer denylist (program / address / mint) | static | CRITICAL | ✅ implemented (host-supplied; registry data from verified incident reports) |
+| R25 | Lookalike / address-poisoning recipient | static | WARNING | ✅ implemented (first-6 + last-6 match to the user's own or a known address) |
 | R27 | Digest binding (broadcast bytes == analyzed bytes) | static | — | ✅ `sameMessage()` helper |
 
 **Fail-closed posture:** anything on a value/authority-capable program (System, SPL Token,

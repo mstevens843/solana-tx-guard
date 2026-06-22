@@ -55,7 +55,9 @@ export function summarizeStateChanges(
         out.push(`Warning — a token account's owner changes to ${short(d.postToken.owner)}`);
       }
       if (!d.preToken.delegate && d.postToken.delegate) {
-        out.push(`Warning — a delegate is granted over your tokens: ${short(d.postToken.delegate)}`);
+        out.push(
+          `Warning — a delegate is granted over your tokens: ${short(d.postToken.delegate)}`,
+        );
       }
     }
   }
