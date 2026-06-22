@@ -4,24 +4,24 @@
 // Round 2 adds R25 lookalike-address + expands the canonical-mint set.)
 
 import { describe, expect, it } from "vitest";
-import type { RiskReport } from "../src/types.js";
 import { analyze } from "../src/index.js";
+import type { RiskReport } from "../src/types.js";
 import { toBase58 } from "../src/util/base58.js";
 import {
+  LOADER_ID,
+  STAKE_ID,
+  SYSTEM_ID,
+  TOKEN_ID,
   buildLegacyTx,
   buildV0TransferWithAltRecipient,
   fromBase58,
-  LOADER_ID,
   loaderSetAuthority,
   pk,
-  STAKE_ID,
   stakeAuthorizeData,
-  SYSTEM_ID,
   sysAdvanceNonce,
   sysAssign,
   sysTransfer,
   sysUnknown,
-  TOKEN_ID,
   tokenApprove,
   tokenSetAuthorityOwner,
 } from "./helpers.js";

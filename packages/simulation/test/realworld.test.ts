@@ -58,9 +58,9 @@ describe("2026 attack corpus — simulation", () => {
       },
     ];
     const assertions = deriveAssertions(diff, USER);
-    expect(assertions.some((a) => a.type === "account-lamports-gte" && a.value === 990_000_000n)).toBe(
-      true,
-    );
+    expect(
+      assertions.some((a) => a.type === "account-lamports-gte" && a.value === 990_000_000n),
+    ).toBe(true);
     const guard = buildAtomicGuard(diff, { user: USER, originalTxLen: 200 });
     expect(guard.fits).toBe(true);
     expect(guard.instructions.length).toBeGreaterThan(0);

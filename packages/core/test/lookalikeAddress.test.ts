@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { analyze } from "../src/index.js";
 import { isLookalike } from "../src/util/lookalike.js";
-import { buildLegacyTx, fromBase58, pk, SYSTEM_ID, sysTransfer } from "./helpers.js";
+import { SYSTEM_ID, buildLegacyTx, fromBase58, pk, sysTransfer } from "./helpers.js";
 
 // A saved exchange-deposit address the user has sent to before, and an attacker's poisoned lookalike
 // (same first-6 + last-6 chars, one middle char off) injected into the user's history.
