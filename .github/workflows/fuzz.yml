@@ -19,6 +19,6 @@ jobs:
       - run: pnpm build
       # Property test: malformed / oversized / version-spoofed messages must never
       # produce a NONE/Benign verdict. Runs the fuzz suite with an extended iteration count.
-      - run: pnpm --filter @txshield/core test -- fuzz --run
+      - run: pnpm --filter @txshield/core run test:fuzz
         env:
           TXSHIELD_FUZZ_ITERATIONS: "100000"

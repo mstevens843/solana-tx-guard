@@ -32,6 +32,7 @@
     "build": "tsup",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:fuzz": "vitest run test/fuzz.test.ts",
     "test:watch": "vitest",
     "clean": "rm -rf dist"
   }

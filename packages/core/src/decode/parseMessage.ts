@@ -70,12 +70,27 @@ export function parseMessage(
     version = "legacy";
     numRequiredSignatures = first;
   }
+  if (sigCount !== numRequiredSignatures) {
+    throw new TxBytesError("signature count does not match message header");
+  }
+  if (numRequiredSignatures === 0) {
+    throw new TxBytesError("transaction requires at least one signature");
+  }
   const numReadonlySignedAccounts = r.readU8();
   const numReadonlyUnsignedAccounts = r.readU8();
 
   // static account keys
   const staticCount = r.readShortVec();
   if (staticCount > MAX_ACCOUNTS) throw new TxBytesError("implausible account count");
+  if (numRequiredSignatures > staticCount) {
+    throw new TxBytesError("required signatures exceed account count");
+  }
+  if (numReadonlySignedAccounts > numRequiredSignatures) {
+    throw new TxBytesError("readonly signed account count exceeds signer count");
+  }
+  if (numReadonlyUnsignedAccounts > staticCount - numRequiredSignatures) {
+    throw new TxBytesError("readonly unsigned account count exceeds unsigned account count");
+  }
   const staticKeys: string[] = [];
   for (let i = 0; i < staticCount; i++) staticKeys.push(toBase58(r.readBytes(PUBKEY_LEN)));
 
@@ -110,6 +125,8 @@ export function parseMessage(
       altLookups.push({ key, writable, readonly });
     }
   }
+
+  if (r.remaining !== 0) throw new TxBytesError("trailing bytes after transaction message");
 
   const messageBytes = bytes.subarray(messageStart, r.pos);
 
@@ -154,6 +171,10 @@ export function parseMessage(
       });
       cursor += 1;
     }
+  }
+
+  if (accounts.length > MAX_ACCOUNTS) {
+    throw new TxBytesError("resolved account count exceeds index limit");
   }
 
   // --- validate every instruction index against the resolved account list (fail closed) ---
